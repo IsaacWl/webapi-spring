@@ -1,11 +1,15 @@
 package com.example.spring;
 
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,19 +19,16 @@ public class CustomerController {
     private CustomerRepository repository;
 
     @GetMapping("/")
-    public Iterable<Customer> listCustomers() {
-
-        return repository.findAll();
+    public ResponseEntity<List<Customer>> listCustomers() {
+        var customers = repository.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(customers);
     }
 
     @PostMapping("/")
-    public @ResponseBody String addCustomer(@RequestParam String firstName, @RequestParam String lastName) {
-        Customer customer = new Customer();
+    public @ResponseBody String addCustomer(@RequestBody CustomerDTO customer) {
+        Customer newCustomer = new Customer(customer);
 
-        customer.setFirstname(firstName);
-        customer.setLastname(lastName);
-
-        repository.save(customer);
+        repository.save(newCustomer);
 
         return "saved";
     }

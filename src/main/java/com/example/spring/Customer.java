@@ -21,6 +21,11 @@ public class Customer {
         this.lastName = lastName;
     }
 
+    public Customer(CustomerDTO customer) {
+        this.firstName = customer.firstName();
+        this.lastName = customer.lastName();
+    }
+
     @Override
     public String toString() {
         return String.format(
